@@ -1,7 +1,7 @@
 import unittest
 from textnode import TextNode, TextType
 
-from markdown_handler import markdown_to_blocks, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes
+from markdown_handler import markdown_to_blocks, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, extract_title
 
 class TestMarkdownHandler(unittest.TestCase):
     def test_noTEXTtype_ignored_1(self):
@@ -362,3 +362,39 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
+
+    def test_extract_title(self):
+        markdown: str = """# Title
+Some other text
+
+This should not be considered by the function!!"""
+        self.assertEqual("Title", extract_title(markdown))
+
+    def test_fail_to_extract_title(self):
+        markdown: str = """ Title
+Some other text
+
+This should not be considered by the function!!"""
+        with self.assertRaises(ValueError):
+            extract_title(markdown)
+
+    def test_extract_title_not_at_the_top(self):
+        markdown: str = """Fake Title
+Some other text
+# This is real title
+This should not be considered by the function!!"""
+        self.assertEqual("This is real title", extract_title(markdown))
+
+    def test_extract_first_title_among_many(self):
+        markdown: str = """# This is first title
+Some other text
+# This is another title which should be ignored
+This should not be considered by the function!!"""
+        self.assertEqual("This is first title", extract_title(markdown))
+
+    def test_extract_title_with_greater_headings(self):
+        markdown: str = """### This is not title
+Some other text
+# This is true title
+This should not be considered by the function!!"""
+        self.assertEqual("This is true title", extract_title(markdown))
