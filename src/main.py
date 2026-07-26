@@ -10,9 +10,9 @@ def main():
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
 
-    if os.path.exists("./public"):
-        shutil.rmtree("./public")
-    os.mkdir("./public")
+    if os.path.exists("./docs"):
+        shutil.rmtree(".docs")
+    os.mkdir("./docs")
     transfer("")
 
     generate_pages_recursive("content", "template.html", "docs", basepath)
