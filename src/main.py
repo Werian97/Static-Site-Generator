@@ -11,7 +11,7 @@ def main():
         basepath = sys.argv[1]
 
     if os.path.exists("./docs"):
-        shutil.rmtree(".docs")
+        shutil.rmtree("./docs")
     os.mkdir("./docs")
     transfer("")
 
